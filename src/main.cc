@@ -1,3 +1,5 @@
+#include "color.h"
+#include "vec3.h"
 #include <iostream>
 
 // Entry point of the program
@@ -25,19 +27,8 @@ int main()
         // Loop over each column in the current row (left to right)
         for (int i = 0; i < image_width; i++)
         {
-            // By convention, color components are real numbers in [0.0, 1.0]
-            // Scale pixel coordinates to [0.0, 1.0] for color calculation
-            auto r = double(i) / (image_width - 1);  // Red increases left to right
-            auto g = double(j) / (image_height - 1); // Green increases top to bottom
-            auto b = 0.0;                            // Blue is always 0
-
-            // Convert color components to integers in [0, 255] for PPM output
-            int ir = int(255.999 * r);
-            int ig = int(255.999 * g);
-            int ib = int(255.999 * b);
-
-            // Write the translated pixel color to output
-            std::cout << ir << ' ' << ig << ' ' << ib << '\n';
+            auto pixel_color = color(double(i) / (image_width - 1), double(j) / (image_height - 1), 0);
+            write_color(std::cout, pixel_color); // Write the pixel color to the output stream
         }
     }
 
