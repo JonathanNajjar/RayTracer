@@ -1,5 +1,14 @@
 # Ignore all HTML files
 *.html
 
+# Ignore all PPM files
+*.ppm
+
+# Ignore all exe files
+*.exe
+
 # Ignore Makefile
 Makefile
+
+# Ignore everything in the .vscode folder
+.vscode/
