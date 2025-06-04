@@ -1,14 +1,42 @@
 #include "color.h"
 #include "vec3.h"
+#include "ray.h"
 #include <iostream>
+
+//returns lerp blue to white
+color ray_color(const ray& r) {
+    vec3 unit_direction = unit_vector(r.direction());
+    auto a = 0.5 * (unit_direction.y() + 1.0);
+    return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
+}
 
 // Entry point of the program
 int main()
 {
+    //Aspect ratio
+    auto aspect_ratio = 16.0 / 9.0;
+    int image_width = 400;
 
-    // Image dimensions
-    int image_width = 256;
-    int image_height = 256;
+    int image_height = int(image_width / aspect_ratio);
+    image_height = (image_height < 1) ? 1 : image_height; // Ensure height is at least 1
+
+    //Camera
+    auto focal_length = 1.0; // Focal length of the camera
+    auto viewport_height = 2.0; // Height of the viewport
+    auto viewport_width = viewport_height * (double(image_width) / image_height); // Width based on aspect ratio
+    auto camera_center = point3(0, 0, 0); // Camera position at the origin
+
+    //calculate vectors across horizontal and vertical directions
+    auto viewport_u = vec3(viewport_width, 0, 0); // Horizontal vector across the viewport
+    auto viewport_v = vec3(0, -viewport_height, 0); // Vertical vector across the viewport
+
+    //Calculate the horizontal and vertical delta vectors from pixel to pixel
+    auto pixel_delta_u = viewport_u / image_width;
+    auto pixel_delta_v = viewport_v / image_height;
+
+    //Calculate location of upper left pixel
+    auto viewport_upper_left = camera_center - vec3(0, 0, focal_length) - viewport_u / 2 - viewport_v / 2;
+    auto pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
     // Render
 
@@ -16,7 +44,7 @@ int main()
     // P3 means colors are in ASCII, next two numbers are width and height,
     // and the last number is the maximum color value (255)
     std::cout << "P3\n"
-              << image_width << ' ' << image_height << "\n255\n";
+        << image_width << ' ' << image_height << "\n255\n";
 
     // Loop over each row (from top to bottom)
     for (int j = 0; j < image_height; j++)
@@ -27,8 +55,12 @@ int main()
         // Loop over each column in the current row (left to right)
         for (int i = 0; i < image_width; i++)
         {
-            auto pixel_color = color(double(i) / (image_width - 1), double(j) / (image_height - 1), 0);
-            write_color(std::cout, pixel_color); // Write the pixel color to the output stream
+            auto pixel_center = pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
+            auto ray_direction = pixel_center - camera_center;
+            ray r(camera_center, ray_direction);
+
+            color pixel_color = ray_color(r);
+            write_color(std::cout, pixel_color);
         }
     }
 
