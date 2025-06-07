@@ -3,7 +3,6 @@
 #define COLOR_H
 
 #include "vec3.h"   // For the color = vec3 alias
-#include <iostream> // For std::ostream
 
 // Alias for vec3 to represent RGB color
 using color = vec3;
@@ -11,7 +10,7 @@ using color = vec3;
 // Write the translated [0,1] RGB color to the output stream in PPM format
 // Each color component is scaled to [0,255] and written as an integer
 // Example output: "128 200 255\n"
-void write_color(std::ostream &out, const color &pixel_color)
+void write_color(std::ostream& out, const color& pixel_color)
 {
     // Extract RGB components from the color
     auto r = pixel_color.x();

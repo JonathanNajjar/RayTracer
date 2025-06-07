@@ -3,9 +3,6 @@
 #ifndef VEC3_H
 #define VEC3_H
 
-#include <cmath>    // For mathematical functions like sqrt
-#include <iostream> // For output streaming
-
 // The vec3 class represents a 3D vector or point in space
 class vec3
 {
