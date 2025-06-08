@@ -2,6 +2,7 @@
 #ifndef COLOR_H
 #define COLOR_H
 
+#include "rtweekend.h"
 #include "vec3.h"   // For the color = vec3 alias
 
 // Alias for vec3 to represent RGB color
